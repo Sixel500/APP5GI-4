@@ -1,5 +1,5 @@
 Lecture de l'AST trouve : 
- Infix: (5 * (4 + 3))
- Prefix: (* 5 (+ 4 3))
- Postfix: (5 (4 3 +) *)
-Evaluation de l'AST trouve : 35
+ Infix: ((5 * 4) + 3)
+ Prefix: (+ (* 5 4) 3)
+ Postfix: ((5 4 *) 3 +)
+Evaluation de l'AST trouve : 23

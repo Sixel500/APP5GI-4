@@ -26,7 +26,7 @@ public class FeuilleAST extends ElemAST {
         if (getType() == Terminal.Type.NOMBRE) {
             return Integer.parseInt(this.terminal.chaine);
         }
-        ErreurEvalAST("Variable présente: " + this.terminal.chaine);
+        ErreurEvalAST("Évaluation impossible, puisqu'une variable est présente: " + this.terminal.chaine);
         return 0;
     }
 
