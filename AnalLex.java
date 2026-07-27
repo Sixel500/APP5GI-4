@@ -45,7 +45,13 @@ public boolean resteTerminal(){
              return new Terminal(Terminal.Type.PLUS, "+");
            }
            if (car == '*'){
-             return new Terminal(Terminal.Type.PLUS, "*");
+             return new Terminal(Terminal.Type.FOIS, "*");
+           }
+           if (car == '-'){
+               return new Terminal(Terminal.Type.MOINS, "-");
+           }
+           if (car == '/'){
+               return new Terminal(Terminal.Type.DIVISE, "/");
            }
            else if (Character.isDigit(car)){
              ptr++;
