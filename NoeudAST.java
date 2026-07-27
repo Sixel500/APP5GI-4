@@ -26,9 +26,13 @@ public class NoeudAST extends ElemAST {
         Integer d = null;
         if (this.gauche.getType() == Terminal.Type.NOMBRE){
             g = this.gauche.IntEvalAST();
+        }else{
+            ErreurEvalAST("Variable présente, évaluation impossible!");
         }
         if (this.droite.getType() == Terminal.Type.NOMBRE){
             d = this.droite.IntEvalAST();
+        }else{
+            ErreurEvalAST("Variable présente, évaluation impossible!");
         }
 
 // 1. Calcul mathématique complet si les deux côtés sont des nombres
