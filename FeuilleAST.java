@@ -28,7 +28,7 @@ public class FeuilleAST extends ElemAST {
 
     @Override
     public String EvalAST() {
-        return "";
+        return this.terminal.chaine;
     }
 
     public Terminal.Type getType() {

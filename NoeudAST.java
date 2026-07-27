@@ -16,49 +16,65 @@ public class NoeudAST extends ElemAST {
     this.droite = droite;
   }
 
- 
-  /** Evaluation de noeud d'AST
-   */
-  public String EvalAST( ) {
-     switch (this.operateur) {
-         case "+":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() + this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "+" + this.droite.StringEvalAST();
-             }
-         case "-":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() - this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "-" + this.droite.StringEvalAST();
-             }
-         case "*":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() * this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "*" + this.droite.StringEvalAST();
-             }
-         case "/":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() / this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "/" + this.droite.StringEvalAST();
-             }
-         default:
-             ErreurEvalAST("Opérateur non supporté : " + this.operateur);
-             return "er";
-     }
-  }
+
+    /** Evaluation de noeud d'AST
+     */
+    public String EvalAST() {
+        // Si tout ce sous-arbre est purement numérique, on calcule directement sa valeur entière
+        if (this.getType() == Terminal.Type.NOMBRE) {
+            return String.valueOf(this.IntEvalAST());
+        }
+
+        // Sinon, c'est un nœud mixte : on évalue d'abord chaque enfant séparément
+        String evalG = this.gauche.EvalAST();
+        String evalD = this.droite.EvalAST();
+
+        // Si par hasard les deux enfants (après évaluation) sont devenus des nombres purs,
+        // on peut tenter de faire le calcul localement
+        if (estUnNombre(evalG) && estUnNombre(evalD)) {
+            int g = Integer.parseInt(evalG);
+            int d = Integer.parseInt(evalD);
+            return String.valueOf(calculer(g, d));
+        }
+
+        // Sinon, on concatène la représentation symbolique
+        return evalG + this.operateur + evalD;
+    }
 
     @Override
     public int IntEvalAST() {
-        return 0;
+        return calculer(this.gauche.IntEvalAST(), this.droite.IntEvalAST());
+    }
+
+    /** Méthode utilitaire pour effectuer le calcul selon l'opérateur */
+    private int calculer(int g, int d) {
+        switch (this.operateur) {
+            case "+": return g + d;
+            case "-": return g - d;
+            case "*": return g * d;
+            case "/":
+                if (d == 0) ErreurEvalAST("Division par zéro");
+                return g / d;
+            default:
+                ErreurEvalAST("Opérateur non supporté : " + this.operateur);
+                return 0;
+        }
+    }
+
+    /** Vérifie si une chaîne représente un entier */
+    private boolean estUnNombre(String s) {
+        if (s == null || s.isEmpty()) return false;
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     @Override
     public Terminal.Type getType() {
-        if (this.gauche.getType() == Terminal.Type.NOMBRE && this.droite.getType() == Terminal.Type.NOMBRE){
+        if (this.gauche.getType() == Terminal.Type.NOMBRE && this.droite.getType() == Terminal.Type.NOMBRE) {
             return Terminal.Type.NOMBRE;
         }
         return Terminal.Type.OPERANDE;
@@ -66,9 +82,8 @@ public class NoeudAST extends ElemAST {
 
     @Override
     public String StringEvalAST() {
-        return "";
+        return this.gauche.StringEvalAST() + this.operateur + this.droite.StringEvalAST();
     }
-
 
     /** Lecture de noeud d'AST
    */

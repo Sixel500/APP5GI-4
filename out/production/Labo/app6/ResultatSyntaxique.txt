@@ -1,2 +1,2 @@
-Lecture de l'AST trouve : (+ + (+ + (* * )))
-Evaluation de l'AST trouve : ++
+Lecture de l'AST trouve : (3 + (7 + (A_B + (5 * (A + 7)))))
+Evaluation de l'AST trouve : +++*+
