@@ -29,11 +29,13 @@ public boolean resteTerminal(){
       Cette methode est une implementation d'un AEF
  */  
   public Terminal prochainTerminal( ) {
+    int etat = 0;
+    String lexeme = "";
+    boolean dernierEstTiret = false;
+
      if (!resteTerminal()) {
        return new Terminal(Terminal.Type.EOF, "");
      }
-     int etat = 0;
-     String lexeme = "";
 
      while (ptr<input.length()){
        char car = input.charAt(ptr);
@@ -44,20 +46,36 @@ public boolean resteTerminal(){
              ptr++;
              return new Terminal(Terminal.Type.PLUS, "+");
            }
-           if (car == '*'){
-             return new Terminal(Terminal.Type.FOIS, "*");
-           }
            if (car == '-'){
-               return new Terminal(Terminal.Type.MOINS, "-");
+             ptr++;
+             return new Terminal(Terminal.Type.MOINS, "-");
            }
            if (car == '/'){
-               return new Terminal(Terminal.Type.DIVISE, "/");
+             ptr++;
+             return new Terminal(Terminal.Type.DIVISE, "/");
+           }
+           if (car == '*'){
+             ptr++;
+             return new Terminal(Terminal.Type.FOIS, "*");
+           }
+           if (car == '('){
+             ptr++;
+             return new Terminal(Terminal.Type.PARANTHESE, "(");
+           }
+           if (car == ')'){
+             ptr++;
+             return new Terminal(Terminal.Type.FINPARANTHESE, ")");
            }
            else if (Character.isDigit(car)){
              ptr++;
              lexeme += car;
              etat = 1;
            }
+           else if (Character.isUpperCase(car)){
+             ptr++;
+             lexeme += car;
+             etat = 2;
+         }
            else {
              ErreurLex("Charactère non reconnu :" + car);
              ptr++;
@@ -74,11 +92,39 @@ public boolean resteTerminal(){
                return new Terminal(Terminal.Type.NOMBRE, lexeme);
              }
              break;
+
+         case 2:
+           if (Character.isLetter(car)){
+             lexeme += car;
+             ptr++;
+             dernierEstTiret = false;
+           }
+           else if (car == '_'){
+             if (dernierEstTiret){
+               ErreurLex("Double tiret bas interdit : " + lexeme + "_");
+             }
+             lexeme+= car;
+             ptr++;
+             dernierEstTiret = true;
+           }
+           else {
+             if (dernierEstTiret){
+               ErreurLex("Operande finit par un tiret : " + lexeme );
+             }
+             return new Terminal(Terminal.Type.OPERANDE, lexeme);
+           }
+           break;
        }
 
      }
+    if (dernierEstTiret){
+      ErreurLex("Operande finit par un tiret : " + lexeme );
+    }
      if (etat == 1) {
        return new Terminal(Terminal.Type.NOMBRE, lexeme);
+     }
+     if (etat == 2){
+       return new Terminal(Terminal.Type.OPERANDE, lexeme);
      }
      return null;
   }
