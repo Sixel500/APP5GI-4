@@ -13,6 +13,7 @@ public class Terminal {
     FOIS,
     DIVISE,
     NOMBRE,
+    OPERANDE,
     EOF
   }
 
