@@ -37,58 +37,47 @@ public ElemAST AnalSynt( ) {
     }
   }
 
-    /** Règle T -> a  */
-    private ElemAST t() {
-        if (this.terminalCourant != null){
-            ElemAST temp = null;
-            if(this.terminalCourant.type == Terminal.Type.NOMBRE){
-                temp = new FeuilleAST(this.terminalCourant);
-                terminal(Terminal.Type.NOMBRE);
-            }
-            if(this.terminalCourant.type == Terminal.Type.OPERANDE){
-                temp = new FeuilleAST(this.terminalCourant);
-                terminal(Terminal.Type.OPERANDE);
-            }
-            return temp;
+    private ElemAST e(){
+        ElemAST noeudGauche = t();
+
+        if (this.terminalCourant != null && (this.terminalCourant.type == Terminal.Type.PLUS || terminalCourant.type == Terminal.Type.MOINS)){
+            String op = this.terminalCourant.chaine;
+            terminal(terminalCourant.type);
+            ElemAST noeudDroit = e();
+            return new NoeudAST(op, noeudGauche, noeudDroit);
         }
-        ErreurSynt("Operande attendue");
-        return null;
+        return noeudGauche;
+    }
+    private ElemAST t(){
+        ElemAST noeudGauche = f();
+
+        if (this.terminalCourant != null && (this.terminalCourant.type == Terminal.Type.FOIS || terminalCourant.type == Terminal.Type.DIVISE)){
+            String op = this.terminalCourant.chaine;
+            terminal(terminalCourant.type);
+            ElemAST noeudDroit = t();
+            return new NoeudAST(op, noeudGauche, noeudDroit);
+        }
+        return noeudGauche;
     }
 
-    // Methode pour chaque symbole non-terminal de la grammaire retenue
-    // ...
-    // ...
-    private ElemAST e() {
-        ElemAST noeudGauche = t();
-        String op = "";
-        ElemAST noeudDroite = null;
-        if (this.terminalCourant != null) {
-            switch (this.terminalCourant.type) {
-                case PLUS:
-                    op = this.terminalCourant.chaine;
-                    terminal(Terminal.Type.PLUS);
-                    noeudDroite = e();
-                    return new NoeudAST(op, noeudGauche, noeudDroite);
-                case MOINS:
-                    op = this.terminalCourant.chaine;
-                    terminal(Terminal.Type.MOINS);
-                    noeudDroite = e();
-                    return new NoeudAST(op, noeudGauche, noeudDroite);
-                case FOIS:
-                    op = this.terminalCourant.chaine;
-                    terminal(Terminal.Type.FOIS);
-                    noeudDroite = e();
-                    return new NoeudAST(op, noeudGauche, noeudDroite);
-                case DIVISE:
-                    op = this.terminalCourant.chaine;
-                    terminal(Terminal.Type.DIVISE);
-                    noeudDroite = e();
-                    return new NoeudAST(op, noeudGauche, noeudDroite);
-                default:
-                    return noeudGauche;
-            }
+
+    private ElemAST f() {
+        Terminal temp = terminalCourant;
+        if (terminalCourant.type == Terminal.Type.NOMBRE) {
+            terminal(Terminal.Type.NOMBRE);
+            return new FeuilleAST(temp); // On passe la chaîne directement[cite: 17]
         }
-        ErreurSynt("Terminal courant vide!");
+        else if (terminalCourant.type == Terminal.Type.OPERANDE) {
+            terminal(Terminal.Type.OPERANDE);
+            return new FeuilleAST(temp); // On garde l'opérande intact au lieu de mettre 1[cite: 17]
+        }
+        else if (terminalCourant.type == Terminal.Type.PARENTHESE) {
+            terminal(Terminal.Type.PARENTHESE);
+            ElemAST noeud = e();
+            terminal(Terminal.Type.FINPARENTHESE);
+            return noeud;
+        }
+        ErreurSynt("Opérande ou '(' attendu");
         return null;
     }
 
