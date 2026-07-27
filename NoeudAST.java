@@ -2,7 +2,7 @@ package app6;
 
 /** @author Ahmed Khoumsi */
 
-/** Classe representant une feuille d'AST
+/** Classe representant un noeud d'AST
  */
 public class NoeudAST extends ElemAST {
 
@@ -20,11 +20,19 @@ public class NoeudAST extends ElemAST {
   /** Evaluation de noeud d'AST
    */
   public int EvalAST( ) {
-     if (this.operateur.equals("+")) {
-       return this.gauche.EvalAST() + this.droite.EvalAST();
+     switch (this.operateur) {
+         case "+":
+             return this.gauche.EvalAST() + this.droite.EvalAST();
+         case "-":
+             return this.gauche.EvalAST() - this.droite.EvalAST();
+         case "*":
+             return this.gauche.EvalAST() * this.droite.EvalAST();
+         case "/":
+             return this.gauche.EvalAST() / this.droite.EvalAST();
+         default:
+             ErreurEvalAST("Opérateur non supporté : " + this.operateur);
+             return 0;
      }
-     ErreurEvalAST("Opérateur non supporté : " + this.operateur);
-     return 0;
   }
 
 
