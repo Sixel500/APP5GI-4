@@ -16,7 +16,6 @@ public class Terminal {
     FINPARANTHESE,
     OPERANDE,
     NOMBRE,
-    OPERANDE,
     EOF
   }
 
