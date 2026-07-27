@@ -1,2 +1,2 @@
-Lecture de l'AST trouve : (3 + 2)
-Evaluation de l'AST trouve : 5
+Lecture de l'AST trouve : (3 + (A_B + (5 * A)))
+Evaluation de l'AST trouve : 3+

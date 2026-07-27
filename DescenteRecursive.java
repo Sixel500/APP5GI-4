@@ -39,7 +39,20 @@ public ElemAST AnalSynt( ) {
 
     /** Règle T -> a  */
     private ElemAST t() {
-        return new FeuilleAST(this.terminalCourant);
+        if (this.terminalCourant != null){
+            ElemAST temp = null;
+            if(this.terminalCourant.type == Terminal.Type.NOMBRE){
+                temp = new FeuilleAST(this.terminalCourant);
+                terminal(Terminal.Type.NOMBRE);
+            }
+            if(this.terminalCourant.type == Terminal.Type.OPERANDE){
+                temp = new FeuilleAST(this.terminalCourant);
+                terminal(Terminal.Type.OPERANDE);
+            }
+            return temp;
+        }
+        ErreurSynt("Operande attendue");
+        return null;
     }
 
     // Methode pour chaque symbole non-terminal de la grammaire retenue
@@ -48,24 +61,28 @@ public ElemAST AnalSynt( ) {
     private ElemAST e() {
         ElemAST noeudGauche = t();
         String op = "";
-        ElemAST noeudDroite = e();
+        ElemAST noeudDroite = null;
         if (this.terminalCourant != null) {
             switch (this.terminalCourant.type) {
                 case PLUS:
                     op = this.terminalCourant.chaine;
                     terminal(Terminal.Type.PLUS);
+                    noeudDroite = e();
                     return new NoeudAST(op, noeudGauche, noeudDroite);
                 case MOINS:
                     op = this.terminalCourant.chaine;
                     terminal(Terminal.Type.MOINS);
+                    noeudDroite = e();
                     return new NoeudAST(op, noeudGauche, noeudDroite);
                 case FOIS:
                     op = this.terminalCourant.chaine;
                     terminal(Terminal.Type.FOIS);
+                    noeudDroite = e();
                     return new NoeudAST(op, noeudGauche, noeudDroite);
                 case DIVISE:
                     op = this.terminalCourant.chaine;
                     terminal(Terminal.Type.DIVISE);
+                    noeudDroite = e();
                     return new NoeudAST(op, noeudGauche, noeudDroite);
                 default:
                     return noeudGauche;
