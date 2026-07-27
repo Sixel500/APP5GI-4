@@ -1,2 +1,5 @@
-Lecture de l'AST trouve : (3 + (7 + (A_B + (5 * (6 + 7)))))
-Evaluation de l'AST trouve : (3 + (7 + (A_B + 65)))
+Lecture de l'AST trouve : 
+ Infix: (5 * (4 + 3))
+ Prefix: (* 5 (+ 4 3))
+ Postfix: (5 (4 3 +) *)
+Evaluation de l'AST trouve : 35

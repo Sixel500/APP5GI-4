@@ -118,7 +118,7 @@ public void ErreurSynt(String s)
     DescenteRecursive dr = new DescenteRecursive(args[0]);
     try {
       ElemAST RacineAST = dr.AnalSynt();
-      toWriteLect += "Lecture de l'AST trouve : " + RacineAST.LectAST() + "\n";
+      toWriteLect += "Lecture de l'AST trouve : \n " + RacineAST.LectAST() + "\n";
       System.out.println(toWriteLect);
       toWriteEval += "Evaluation de l'AST trouve : " + RacineAST.EvalAST() + "\n";
       System.out.println(toWriteEval);

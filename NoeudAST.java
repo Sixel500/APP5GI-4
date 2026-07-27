@@ -21,53 +21,21 @@ public class NoeudAST extends ElemAST {
 
      */
 
-    public String EvalAST() {
-        Integer g = null;
-        Integer d = null;
-        if (this.gauche.getType() == Terminal.Type.NOMBRE){
-            g = this.gauche.IntEvalAST();
-        }else{
-            ErreurEvalAST("Variable présente, évaluation impossible!");
-        }
-        if (this.droite.getType() == Terminal.Type.NOMBRE){
-            d = this.droite.IntEvalAST();
-        }else{
-            ErreurEvalAST("Variable présente, évaluation impossible!");
-        }
+    public int EvalAST() {
+        Integer g = this.gauche.EvalAST();
+        Integer d = this.droite.EvalAST();
 
-// 1. Calcul mathématique complet si les deux côtés sont des nombres
-        if (g != null && d != null) {
-            switch (this.operateur) {
-                case "+": return String.valueOf(g + d);
-                case "-": return String.valueOf(g - d);
-                case "*": return String.valueOf(g * d);
-                case "/": return String.valueOf(g / d);
+        switch (this.operateur) {
+                case "+": return g + d;
+                case "-": return g - d;
+                case "*": return g * d;
+                case "/": return g / d;
                 default:
                     ErreurEvalAST("Opérateur non supporté : " + this.operateur);
-                    return "0";
+                    return 0;
             }
-        }
-        return "(" + this.gauche.EvalAST() + " " + this.operateur + " " + this.droite.EvalAST() + ")";
     }
 
-    @Override
-    public int IntEvalAST() {
-        switch (this.operateur) {
-            case "+":
-                return this.gauche.IntEvalAST() + this.droite.IntEvalAST();
-            case "-":
-                return this.gauche.IntEvalAST() - this.droite.IntEvalAST();
-            case "*":
-                return this.gauche.IntEvalAST() * this.droite.IntEvalAST();
-            case "/":
-                    return this.gauche.IntEvalAST() / this.droite.IntEvalAST();
-            default:
-                ErreurEvalAST("Opérateur non supporté : " + this.operateur);
-                return 0;
-        }
-    }
-
-    @Override
     public Terminal.Type getType() {
         if (this.gauche.getType() == Terminal.Type.NOMBRE && this.droite.getType() == Terminal.Type.NOMBRE){
             return Terminal.Type.NOMBRE;
@@ -75,18 +43,26 @@ public class NoeudAST extends ElemAST {
         return Terminal.Type.OPERANDE;
     }
 
-    @Override
-    public String StringEvalAST() {
-        return this.gauche.StringEvalAST() + this.operateur + this.droite.StringEvalAST();
+    public String toString(){
+        return operateur;
     }
-
-
     /** Lecture de noeud d'AST
    */
   public String LectAST( ) {
-     return "(" + this.gauche.LectAST() + " "  +  this.operateur + " " + this.droite.LectAST() + ")";
+
+     return "Infix: " + LectInfix() + "\n Prefix: " + LectPrefix() + "\n Postfix: " + LectPostfix();
   }
 
+  public String LectInfix( ) {
+      return "(" + this.gauche.LectInfix() + " " +  this.operateur + " " + this.droite.LectInfix() + ")";
+  }
+  public String LectPrefix(){
+      return "(" +  this.operateur + " " + this.gauche.LectPrefix() + " " + this.droite.LectPrefix() + ")";
+  }
+
+  public String LectPostfix(){
+      return "(" + this.gauche.LectPostfix() + " " + this.droite.LectPostfix() + " " + this.operateur + ")";
+  }
 }
 
 

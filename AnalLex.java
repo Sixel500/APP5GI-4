@@ -2,6 +2,8 @@ package app6;
 
 /** @author Ahmed Khoumsi */
 
+import static java.lang.Integer.max;
+
 /** Cette classe effectue l'analyse lexicale
  */
 public class AnalLex {
@@ -101,7 +103,7 @@ public boolean resteTerminal(){
            }
            else if (car == '_'){
              if (dernierEstTiret){
-               ErreurLex("Double tiret bas interdit : " + lexeme + "_");
+               ErreurLex("Double tiret bas interdit : " + input.substring(max(0,ptr-10),ptr+1) );//+ lexeme + "_");
              }
              lexeme+= car;
              ptr++;
@@ -109,7 +111,7 @@ public boolean resteTerminal(){
            }
            else {
              if (dernierEstTiret){
-               ErreurLex("Operande finit par un tiret : " + lexeme );
+               ErreurLex("Operande finit par un tiret : " + input.substring(max(0,ptr-10),ptr+1) );//+ lexeme );
              }
              return new Terminal(Terminal.Type.OPERANDE, lexeme);
            }
@@ -118,7 +120,7 @@ public boolean resteTerminal(){
 
      }
     if (dernierEstTiret){
-      ErreurLex("Operande finit par un tiret : " + lexeme );
+      ErreurLex("Operande finit par un tiret : " + input.substring(max(0,ptr-10),ptr+1) );//+ lexeme );
     }
      if (etat == 1) {
        return new Terminal(Terminal.Type.NOMBRE, lexeme);

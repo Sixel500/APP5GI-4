@@ -14,30 +14,29 @@ public class FeuilleAST extends ElemAST {
   public FeuilleAST(Terminal term ) {  // avec arguments
     this.terminal = term;
   }
-
-
       /** Evaluation de feuille d'AST
        */
     public String StringEvalAST( ) {
           return this.terminal.chaine;
     }
 
-    public int IntEvalAST( ) {
+
+    @Override
+    public int EvalAST() {
         if (getType() == Terminal.Type.NOMBRE) {
             return Integer.parseInt(this.terminal.chaine);
         }
+        ErreurEvalAST("Variable présente: " + this.terminal.chaine);
         return 0;
-    }
-
-    @Override
-    public String EvalAST() {
-        return this.terminal.chaine;
     }
 
     public Terminal.Type getType() {
       return terminal.type;
     }
 
+    public String toString() {
+        return this.terminal.chaine;
+    }
 
 
 
@@ -48,4 +47,11 @@ public class FeuilleAST extends ElemAST {
     return this.terminal.chaine;
   }
 
+    public String LectInfix( ) {  return this.terminal.chaine;
+    }
+    public String LectPrefix(){  return this.terminal.chaine;
+    }
+
+    public String LectPostfix(){  return this.terminal.chaine;
+    }
 }

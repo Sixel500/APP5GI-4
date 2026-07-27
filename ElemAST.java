@@ -9,28 +9,22 @@ public abstract class ElemAST {
   
   /** Evaluation d'AST
    */
-  public abstract String EvalAST();
-
-
-    /** Evaluation d'AST
-     */
-    public abstract int IntEvalAST();
+    public abstract int EvalAST();
 
     public abstract Terminal.Type getType();
 
-    /** Evaluation d'AST
-     */
-    public abstract String StringEvalAST();
-  /** Lecture d'AST
+    /** Lecture d'AST
    */
-  public abstract String LectAST();
+    public abstract String LectAST();
 
-
+    public abstract String LectInfix();
+    public abstract String LectPrefix();
+    public abstract String LectPostfix();
 /** ErreurEvalAST() envoie un message d'erreur lors de la construction d'AST
  */  
-  public void ErreurEvalAST(String s) {	
+    public void ErreurEvalAST(String s) {
     System.err.println("Erreur : " + s);
     System.exit(1);
-  }
+    }
 
 }
