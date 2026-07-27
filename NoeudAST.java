@@ -19,24 +19,58 @@ public class NoeudAST extends ElemAST {
  
   /** Evaluation de noeud d'AST
    */
-  public int EvalAST( ) {
+  public String EvalAST( ) {
      switch (this.operateur) {
          case "+":
-             return this.gauche.EvalAST() + this.droite.EvalAST();
+             if (this.getType() == Terminal.Type.NOMBRE){
+                 return String.valueOf(this.gauche.IntEvalAST() + this.droite.IntEvalAST());
+             }else{
+                 return this.gauche.StringEvalAST() + "+" + this.droite.StringEvalAST();
+             }
          case "-":
-             return this.gauche.EvalAST() - this.droite.EvalAST();
+             if (this.getType() == Terminal.Type.NOMBRE){
+                 return String.valueOf(this.gauche.IntEvalAST() - this.droite.IntEvalAST());
+             }else{
+                 return this.gauche.StringEvalAST() + "-" + this.droite.StringEvalAST();
+             }
          case "*":
-             return this.gauche.EvalAST() * this.droite.EvalAST();
+             if (this.getType() == Terminal.Type.NOMBRE){
+                 return String.valueOf(this.gauche.IntEvalAST() * this.droite.IntEvalAST());
+             }else{
+                 return this.gauche.StringEvalAST() + "*" + this.droite.StringEvalAST();
+             }
          case "/":
-             return this.gauche.EvalAST() / this.droite.EvalAST();
+             if (this.getType() == Terminal.Type.NOMBRE){
+                 return String.valueOf(this.gauche.IntEvalAST() / this.droite.IntEvalAST());
+             }else{
+                 return this.gauche.StringEvalAST() + "/" + this.droite.StringEvalAST();
+             }
          default:
              ErreurEvalAST("Opérateur non supporté : " + this.operateur);
-             return 0;
+             return "er";
      }
   }
 
+    @Override
+    public int IntEvalAST() {
+        return 0;
+    }
 
-  /** Lecture de noeud d'AST
+    @Override
+    public Terminal.Type getType() {
+        if (this.gauche.getType() == Terminal.Type.NOMBRE && this.droite.getType() == Terminal.Type.NOMBRE){
+            return Terminal.Type.NOMBRE;
+        }
+        return Terminal.Type.OPERANDE;
+    }
+
+    @Override
+    public String StringEvalAST() {
+        return "";
+    }
+
+
+    /** Lecture de noeud d'AST
    */
   public String LectAST( ) {
      return "(" + this.gauche.LectAST() + " "  +  this.operateur + " " + this.droite.LectAST() + ")";

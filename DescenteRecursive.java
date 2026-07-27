@@ -37,33 +37,45 @@ public ElemAST AnalSynt( ) {
     }
   }
 
-
-// Methode pour chaque symbole non-terminal de la grammaire retenue
-// ... 
-// ...
-private ElemAST e(){
-  ElemAST noeudGauche = t();
-
-  if (this.terminalCourant != null && this.terminalCourant.type == Terminal.Type.PLUS){
-    String op = this.terminalCourant.chaine;
-    terminal(Terminal.Type.PLUS);
-    ElemAST noeudDroit = e();
-    return new NoeudAST(op, noeudGauche, noeudDroit);
-  }
-  return noeudGauche;
-}
-
-  /** Règle T -> a (où 'a' est un NOMBRE) */
-  private ElemAST t() {
-    if (this.terminalCourant != null && this.terminalCourant.type == Terminal.Type.NOMBRE) {
-      int valeur = Integer.parseInt(this.terminalCourant.chaine);
-      terminal(Terminal.Type.NOMBRE);
-      return new FeuilleAST(valeur);
-    } else {
-      ErreurSynt("Nombre attendu");
-      return null;
+    /** Règle T -> a  */
+    private ElemAST t() {
+        return new FeuilleAST(this.terminalCourant);
     }
-  }
+
+    // Methode pour chaque symbole non-terminal de la grammaire retenue
+    // ...
+    // ...
+    private ElemAST e() {
+        ElemAST noeudGauche = t();
+        String op = "";
+        ElemAST noeudDroite = e();
+        if (this.terminalCourant != null) {
+            switch (this.terminalCourant.type) {
+                case PLUS:
+                    op = this.terminalCourant.chaine;
+                    terminal(Terminal.Type.PLUS);
+                    return new NoeudAST(op, noeudGauche, noeudDroite);
+                case MOINS:
+                    op = this.terminalCourant.chaine;
+                    terminal(Terminal.Type.MOINS);
+                    return new NoeudAST(op, noeudGauche, noeudDroite);
+                case FOIS:
+                    op = this.terminalCourant.chaine;
+                    terminal(Terminal.Type.FOIS);
+                    return new NoeudAST(op, noeudGauche, noeudDroite);
+                case DIVISE:
+                    op = this.terminalCourant.chaine;
+                    terminal(Terminal.Type.DIVISE);
+                    return new NoeudAST(op, noeudGauche, noeudDroite);
+                default:
+                    return noeudGauche;
+            }
+        }
+        ErreurSynt("Terminal courant vide!");
+        return null;
+    }
+
+
 
 /** ErreurSynt() envoie un message d'erreur syntaxique
  */

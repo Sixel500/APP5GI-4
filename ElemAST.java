@@ -9,9 +9,18 @@ public abstract class ElemAST {
   
   /** Evaluation d'AST
    */
-  public abstract int EvalAST();
+  public abstract String EvalAST();
 
 
+    /** Evaluation d'AST
+     */
+    public abstract int IntEvalAST();
+
+    public abstract Terminal.Type getType();
+
+    /** Evaluation d'AST
+     */
+    public abstract String StringEvalAST();
   /** Lecture d'AST
    */
   public abstract String LectAST();
