@@ -12,8 +12,8 @@ public class Terminal {
     MOINS,
     FOIS,
     DIVISE,
-    PARANTHESE,
-    FINPARANTHESE,
+    PARENTHESE,
+    FINPARENTHESE,
     OPERANDE,
     NOMBRE,
     EOF

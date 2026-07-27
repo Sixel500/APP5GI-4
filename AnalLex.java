@@ -60,11 +60,11 @@ public boolean resteTerminal(){
            }
            if (car == '('){
              ptr++;
-             return new Terminal(Terminal.Type.PARANTHESE, "(");
+             return new Terminal(Terminal.Type.PARENTHESE, "(");
            }
            if (car == ')'){
              ptr++;
-             return new Terminal(Terminal.Type.FINPARANTHESE, ")");
+             return new Terminal(Terminal.Type.FINPARENTHESE, ")");
            }
            else if (Character.isDigit(car)){
              ptr++;
