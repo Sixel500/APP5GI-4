@@ -23,7 +23,10 @@ public class FeuilleAST extends ElemAST {
     }
 
     public int IntEvalAST( ) {
-        return Integer.parseInt(this.terminal.chaine);
+        if (getType() == Terminal.Type.NOMBRE) {
+            return Integer.parseInt(this.terminal.chaine);
+        }
+        return 0;
     }
 
     @Override

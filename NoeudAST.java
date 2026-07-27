@@ -17,39 +17,34 @@ public class NoeudAST extends ElemAST {
   }
 
 
-  /** Evaluation de noeud d'AST
-   */
-  public String EvalAST( ) {
-     switch (this.operateur) {
-         case "+":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() + this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "+" + this.droite.StringEvalAST();
-             }
-         case "-":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() - this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "-" + this.droite.StringEvalAST();
-             }
-         case "*":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() * this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "*" + this.droite.StringEvalAST();
-             }
-         case "/":
-             if (this.getType() == Terminal.Type.NOMBRE){
-                 return String.valueOf(this.gauche.IntEvalAST() / this.droite.IntEvalAST());
-             }else{
-                 return this.gauche.StringEvalAST() + "/" + this.droite.StringEvalAST();
-             }
-         default:
-             ErreurEvalAST("Opérateur non supporté : " + this.operateur);
-             return "er";
-     }
-  }
+    /** Evaluation de noeud d'AST
+
+     */
+
+    public String EvalAST() {
+        Integer g = null;
+        Integer d = null;
+        if (this.gauche.getType() == Terminal.Type.NOMBRE){
+            g = this.gauche.IntEvalAST();
+        }
+        if (this.droite.getType() == Terminal.Type.NOMBRE){
+            d = this.droite.IntEvalAST();
+        }
+
+// 1. Calcul mathématique complet si les deux côtés sont des nombres
+        if (g != null && d != null) {
+            switch (this.operateur) {
+                case "+": return String.valueOf(g + d);
+                case "-": return String.valueOf(g - d);
+                case "*": return String.valueOf(g * d);
+                case "/": return String.valueOf(g / d);
+                default:
+                    ErreurEvalAST("Opérateur non supporté : " + this.operateur);
+                    return "0";
+            }
+        }
+        return "(" + this.gauche.EvalAST() + " " + this.operateur + " " + this.droite.EvalAST() + ")";
+    }
 
     @Override
     public int IntEvalAST() {
