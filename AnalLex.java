@@ -157,7 +157,7 @@ public boolean resteTerminal(){
     Terminal t = null;
     while(lexical.resteTerminal()){
       t = lexical.prochainTerminal();
-      toWrite +=t.chaine + "\n" ;  // toWrite contient le resultat
+      toWrite += String.valueOf(lexical.ptr) + ". " + t.type + " : " + t.chaine + "\n" ;  // toWrite contient le resultat
     }				   //    d'analyse lexicale
     System.out.println(toWrite); 	// Ecriture de toWrite sur la console
     Writer w = new Writer(args[1],toWrite); // Ecriture de toWrite dans fichier args[1]
