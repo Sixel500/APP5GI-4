@@ -121,11 +121,8 @@ public boolean resteTerminal(){
                    etat = 2;
                }
                break;
-
        }
-
      }
-
 
      if (etat == 1) {
        return new Terminal(Terminal.Type.NOMBRE, lexeme);
