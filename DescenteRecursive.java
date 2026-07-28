@@ -77,7 +77,7 @@ public ElemAST AnalSynt( ) {
             terminal(Terminal.Type.FINPARENTHESE);
             return noeud;
         }
-        ErreurSynt("Opérande ou '(' attendu");
+        ErreurSynt("Une deuxième opération est présente avant  : " + temp.chaine );
         return null;
     }
 
