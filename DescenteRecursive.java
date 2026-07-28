@@ -65,19 +65,23 @@ public ElemAST AnalSynt( ) {
         Terminal temp = terminalCourant;
         if (terminalCourant.type == Terminal.Type.NOMBRE) {
             terminal(Terminal.Type.NOMBRE);
-            return new FeuilleAST(temp); // On passe la chaîne directement[cite: 17]
+            return new FeuilleAST(temp); // On passe le terminal directement
         }
         else if (terminalCourant.type == Terminal.Type.OPERANDE) {
             terminal(Terminal.Type.OPERANDE);
-            return new FeuilleAST(temp); // On garde l'opérande intact au lieu de mettre 1[cite: 17]
+            return new FeuilleAST(temp); // On garde l'opérande
         }
         else if (terminalCourant.type == Terminal.Type.PARENTHESE) {
             terminal(Terminal.Type.PARENTHESE);
             ElemAST noeud = e();
             terminal(Terminal.Type.FINPARENTHESE);
             return noeud;
+        }else if (terminalCourant.type == Terminal.Type.PLUS || terminalCourant.type == Terminal.Type.FOIS || terminalCourant.type == Terminal.Type.DIVISE || terminalCourant.type == Terminal.Type.MOINS){
+            ErreurSynt("Une opération est à un endroit invalide : " + lexical.getLastChars() );
+        } else {
+            ErreurSynt("Opérande manquante dans la parenthèse : " + lexical.getLastChars() );
         }
-        ErreurSynt("Une deuxième opération est présente avant  : " + temp.chaine );
+
         return null;
     }
 

@@ -33,7 +33,6 @@ public boolean resteTerminal(){
   public Terminal prochainTerminal( ) {
     int etat = 0;
     String lexeme = "";
-    boolean dernierEstTiret = false;
 
      if (!resteTerminal()) {
        return new Terminal(Terminal.Type.EOF, "");
@@ -77,7 +76,11 @@ public boolean resteTerminal(){
              ptr++;
              lexeme += car;
              etat = 2;
-         }
+         } else if (car == '_'){
+               ptr++;
+               lexeme += car;
+               etat = 3;
+           }
            else {
              ErreurLex("Charactère non reconnu :" + car);
              ptr++;
@@ -99,39 +102,47 @@ public boolean resteTerminal(){
            if (Character.isLetter(car)){
              lexeme += car;
              ptr++;
-             dernierEstTiret = false;
            }
            else if (car == '_'){
-             if (dernierEstTiret){
-               ErreurLex("Double tiret bas interdit : " + input.substring(max(0,ptr-10),ptr+1) );//+ lexeme + "_");
-             }
-             lexeme+= car;
              ptr++;
-             dernierEstTiret = true;
+             lexeme += car;
+             etat = 3;
            }
            else {
-             if (dernierEstTiret){
-               ErreurLex("Operande finit par un tiret : " + input.substring(max(0,ptr-10),ptr+1) );//+ lexeme );
-             }
              return new Terminal(Terminal.Type.OPERANDE, lexeme);
            }
            break;
+           case 3:
+               if (car == '_') {
+                   ErreurLex("Double tiret bas interdit : " + this.getLastChars());
+               }else if (Character.isLetter(car)){
+                   lexeme += car;
+                   ptr++;
+                   etat = 2;
+               }
+               break;
+
        }
 
      }
-    if (dernierEstTiret){
-      ErreurLex("Operande finit par un tiret : " + input.substring(max(0,ptr-10),ptr+1) );//+ lexeme );
-    }
+
+
      if (etat == 1) {
        return new Terminal(Terminal.Type.NOMBRE, lexeme);
      }
      if (etat == 2){
        return new Terminal(Terminal.Type.OPERANDE, lexeme);
      }
+     if (etat == 3){
+         ErreurLex("Operande finit par un tiret bas: " + this.getLastChars() );
+     }
      return null;
   }
 
- 
+ public String getLastChars(){
+     return input.substring(max(0,ptr-10),ptr+1);
+ }
+
 /** ErreurLex() envoie un message d'erreur lexicale
  */ 
   public void ErreurLex(String s) {	
@@ -157,9 +168,9 @@ public boolean resteTerminal(){
     Terminal t = null;
     while(lexical.resteTerminal()){
       t = lexical.prochainTerminal();
-      toWrite += String.valueOf(lexical.ptr) + ". " + t.type + " : " + t.chaine + "\n" ;  // toWrite contient le resultat
+      System.out.println(String.valueOf(lexical.ptr) + ". " + t.type + " : " + t.chaine + "\n");  // toWrite contient le resultat
     }				   //    d'analyse lexicale
-    System.out.println(toWrite); 	// Ecriture de toWrite sur la console
+    	// Ecriture de toWrite sur la console
     Writer w = new Writer(args[1],toWrite); // Ecriture de toWrite dans fichier args[1]
     System.out.println("Fin d'analyse lexicale");
   }
